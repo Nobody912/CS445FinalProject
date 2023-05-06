@@ -7,12 +7,35 @@ global linetracking
 global drawing_layer
 global f_new_layer
 
+### CONFIGURATION ###
+
+# canvas size
 RESOLUTION = {
     "width": 640,
     "height": 480
 }
+
+# color HSV LUT for faux pen
+COLOR_RANGES = {
+    "red": {"lower": [0, 50, 50], "upper": [10, 255, 255]},
+    "orange": {"lower": [11, 50, 50], "upper": [20, 255, 255]},
+    "yellow": {"lower": [21, 50, 50], "upper": [30, 255, 255]},
+    "green": {"lower": [31, 50, 50], "upper": [70, 255, 255]},
+    "blue": {"lower": [91, 50, 50], "upper": [130, 255, 255]},
+    "purple": {"lower": [131, 50, 50], "upper": [170, 255, 255]},
+    "pink": {"lower": [171, 50, 50], "upper": [180, 255, 255]}
+}
+
+# faux pen color
+COLOR = COLOR_RANGES["blue"]
+
+# faux pen settings
+# THRESHOLD - distance between points to be considered a new point
+# PEN_RADIUS - radius of search from index finger for pen tip
 THRESHOLD = 3
 PEN_RADIUS = 50
+
+### END CONFIGURATION ###
 
 
 def finger():
@@ -97,9 +120,9 @@ def process_frame(frame):
     cY = None
 
     # Define the color range for the pen tip
-    lower_blue = np.array([100, 0, 63])
-    upper_blue = np.array([130, 255, 255])
-
+    lower_blue = COLOR["lower"]
+    upper_blue = COLOR["upper"]
+    
     # Create a mask using the color range
     mask = cv2.inRange(hsv_frame, lower_blue, upper_blue)
 
